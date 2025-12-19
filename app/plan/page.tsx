@@ -14,8 +14,8 @@ export default async function PlanPage() {
   const stats = await getStats();
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Plan — Overview</h1>
+    <div className="container">
+      <h1 className="text-3xl font-extrabold mb-4">Plan — Overview</h1>
       <PlanClient total={stats.total} completed={stats.completed} />
     </div>
   );

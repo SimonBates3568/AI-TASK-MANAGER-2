@@ -73,7 +73,7 @@ export default function TaskList({ refreshFlag, filter, aiPending, aiSuggestion,
   return (
     <div className="space-y-2">
       {displayed.map(t=> (
-        <div key={t.id} className="bg-white p-3 rounded shadow flex items-start justify-between">
+        <div key={t.id} className="card flex items-start justify-between">
           <div>
             <div className="flex items-center gap-2">
               <h3 className="font-semibold">{t.title}</h3>
@@ -100,9 +100,23 @@ export default function TaskList({ refreshFlag, filter, aiPending, aiSuggestion,
             <div className="mt-2 text-sm text-gray-500">{t.completed ? 'Completed' : 'Not completed'}</div>
           </div>
           <div className="flex flex-col gap-2">
-            <button className="text-blue-600" onClick={()=>setEditing(t)}>Edit</button>
-            <button className="text-red-600" onClick={()=>remove(t.id)}>Delete</button>
-            <button className="text-sm border rounded px-2 py-1" onClick={()=>toggleComplete(t)}>{t.completed? 'Undo' : 'Complete'}</button>
+            <button
+              className="inline-flex items-center px-3 py-1.5 rounded-md bg-yellow-500 text-white hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+              onClick={() => setEditing(t)}
+            >
+              Edit
+            </button>
+
+            <button
+              className="inline-flex items-center px-3 py-1.5 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300"
+              onClick={() => remove(t.id)}
+            >
+              Delete
+            </button>
+
+            <button className="inline-flex items-center px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300" onClick={() => toggleComplete(t)}>
+              {t.completed ? 'Undo' : 'Complete'}
+            </button>
           </div>
         </div>
       ))}

@@ -54,16 +54,16 @@ export default function TasksPage() {
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Tasks</h1>
-      <div className="mb-4 flex items-center gap-4">
+    <div className="container">
+      <h1 className="text-3xl font-extrabold mb-4">Tasks</h1>
+      <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <label className="flex items-center gap-2">
           <input type="checkbox" checked={autoAccept} onChange={e => setAutoAccept(e.target.checked)} />
           <span className="text-sm">Auto-accept AI suggestions</span>
         </label>
         <label className="flex items-center gap-2">
           <span className="text-sm">Threshold:</span>
-          <input type="range" min={0} max={1} step={0.05} value={threshold} onChange={e=>setThreshold(parseFloat(e.target.value))} />
+          <input type="range" min={0} max={1} step={0.05} value={threshold} onChange={e=>setThreshold(parseFloat(e.target.value))} className="w-48" />
           <span className="text-sm">{Math.round(threshold*100)}%</span>
         </label>
       </div>

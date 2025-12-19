@@ -1,17 +1,84 @@
+/*
+  globals.css — Design tokens and small utilities
+
+  This file holds a minimal set of layout and UI tokens used across the app:
+  - container: page width / horizontal padding
+  - card: surface style for panels and items
+  - btn / btn-ghost: primary and secondary action styles
+  - input: shared form control styles (applies to input/textarea/select)
+  - priority-* badges: small colored indicators for task priority
+
+  NOTE: This file uses Tailwind's directives and @apply utilities. Tailwind + PostCSS
+  must be configured in the project (tailwind.config.cjs + postcss.config.cjs) so
+  the @tailwind and @apply rules are processed correctly.
+*/
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* keep full-height app container for some layout patterns */
 html, body, #__next {
   height: 100%;
 }
 
-body {
-  @apply bg-gray-50 text-gray-900;
+/* Simple CSS variables (fallbacks / accent colors). We primarily rely on Tailwind utilities,
+   but these are available if needed for custom styles. */
+:root{
+  --bg: #0f172a;
+  --accent: #2563eb;
+  --muted: #6b7280;
 }
 
+body {
+  @apply bg-gray-50 text-gray-900 antialiased;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Layout helpers */
+.container {
+  /* centered content with responsive horizontal padding */
+  @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Surfaces and controls */
+.card {
+  /* Surface: light background with dark text for good contrast.
+     In dark mode we use a slightly lighter slate surface and light text. */
+  @apply bg-white text-gray-900 shadow-md rounded-lg p-4;
+  @apply dark:bg-slate-800 dark:text-slate-100;
+}
+.muted { @apply text-gray-500; }
+
+/* Buttons */
+.btn {
+  @apply inline-flex items-center px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300;
+}
+.btn-ghost { @apply inline-flex items-center px-3 py-1.5 rounded-md bg-gray-100 text-gray-800 hover:bg-gray-200; }
+
+/* simple button active state helper */
+.btn-active { @apply bg-blue-600 text-white; }
+
+/* Responsive helpers */
+.stack { @apply space-y-3; }
+.row { @apply flex flex-wrap gap-3; }
+
+/* Priority badges */
 .priority-badge { @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold; }
 .priority-low { @apply bg-green-100 text-green-800; }
 .priority-medium { @apply bg-yellow-100 text-yellow-800; }
 .priority-high { @apply bg-orange-100 text-orange-800; }
 .priority-critical { @apply bg-red-100 text-red-800; }
+
+/* Form controls — use the same visual language across inputs */
+input, textarea, select, .input {
+  /* Ensure inputs have readable text on both light and dark surfaces.
+     Light: white background with dark text. Dark: darker surface with light text. */
+  @apply border border-gray-200 rounded-md px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-200;
+  @apply dark:bg-slate-700 dark:text-slate-100 dark:border-slate-600;
+  /* Slightly different focus ring in dark mode */
+  /* Note: Tailwind will merge focus:dark variants when processed */
+}
+
+/* small utilities for subtle shadows */
+.elev { @apply shadow-sm }

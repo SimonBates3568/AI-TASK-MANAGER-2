@@ -26,18 +26,18 @@ export default function PlanClient({ total, completed }: { total: number, comple
 
   return (
     <div>
-      <div className="bg-white p-4 rounded shadow mb-4">
+      <div className="card mb-4">
         <h2 className="text-lg font-semibold">Progress</h2>
         <div className="mt-2"><ProgressBar percent={percent} /></div>
-        <div className="mt-2 text-sm text-gray-600">{completed} of {total} tasks completed ({percent}%)</div>
+        <div className="mt-2 text-sm text-gray-600">{currentCompleted} of {currentTotal} tasks completed ({percent}%)</div>
       </div>
 
       <div className="flex items-center gap-2 mb-4">
         <span className="text-sm font-medium">Show:</span>
-        <button className={`px-2 py-1 rounded ${filter==='all'?'bg-blue-600 text-white':'bg-gray-100'}`} onClick={()=>setFilter('all')}>All</button>
-        <button className={`px-2 py-1 rounded ${filter==='incomplete'?'bg-blue-600 text-white':'bg-gray-100'}`} onClick={()=>setFilter('incomplete')}>Incomplete</button>
-        <button className={`px-2 py-1 rounded ${filter==='completed'?'bg-blue-600 text-white':'bg-gray-100'}`} onClick={()=>setFilter('completed')}>Completed</button>
-        <button className="ml-4 px-2 py-1 rounded bg-gray-100" onClick={()=>setRefreshFlag(f=>f+1)}>Refresh</button>
+        <button className={`btn ${filter==='all'?'btn-active':''}`} onClick={()=>setFilter('all')}>All</button>
+        <button className={`btn ${filter==='incomplete'?'btn-active':''}`} onClick={()=>setFilter('incomplete')}>Incomplete</button>
+        <button className={`btn ${filter==='completed'?'btn-active':''}`} onClick={()=>setFilter('completed')}>Completed</button>
+        <button className="btn-ghost ml-4" onClick={()=>setRefreshFlag(f=>f+1)}>Refresh</button>
       </div>
 
       <TaskList filter={filter} refreshFlag={refreshFlag} onChange={refreshStats} />
