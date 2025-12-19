@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     const { title, description, priority } = body;
     if (!title) return NextResponse.json({ error: 'Missing title' }, { status: 400 });
 
-    const task = await prisma.task.create({ data: { title, description: description || '', priority: priority || 'MEDIUM' } });
+  const task = await prisma.task.create({ data: { title, description: description || '', priority: priority || 'MEDIUM', aiAssigned: false } });
     return NextResponse.json(task);
   } catch (err: any) {
     console.error('POST /api/tasks error', err);

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 type Priority = 'LOW'|'MEDIUM'|'HIGH'|'CRITICAL';
 
-export default function TaskInput({ onCreated }: { onCreated?: () => void }) {
+export default function TaskInput({ onCreated, onAiResult, autoAccept, threshold, onAutoAccept }: { onCreated?: (id: string) => void, onAiResult?: (id: string, priority?: Priority) => void, autoAccept?: boolean, threshold?: number, onAutoAccept?: (id: string, priority?: Priority) => void }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [override, setOverride] = useState<string>('');
@@ -25,6 +25,9 @@ export default function TaskInput({ onCreated }: { onCreated?: () => void }) {
 
     const created = await res.json();
 
+    // notify parent that a task was created so it can show AI-pending state
+    onCreated?.(created.id);
+
     // After creation, call AI to get recommendation and update if user didn't override
     if (!override) {
       try {
@@ -33,24 +36,47 @@ export default function TaskInput({ onCreated }: { onCreated?: () => void }) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ title, description }),
         });
-        const { priority } = await pRes.json();
-        if (priority && priority !== created.priority) {
+        const body = await pRes.json();
+        const priority = body.priority;
+        const confidence = typeof body.confidence === 'number' ? body.confidence : 0;
+        const raw = body.raw ?? '';
+        const evaluatedAt = new Date().toISOString();
+        // notify parent of AI result (even if same as created)
+        onAiResult?.(created.id, priority);
+
+        // Persist AI metadata
+        // If autoAccept is enabled and confidence >= threshold, apply the priority change
+        const shouldApply = !!autoAccept && (confidence >= (threshold ?? 0.7));
+
+        if (shouldApply && priority && priority !== created.priority) {
           await fetch(`/api/tasks/${created.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ priority }),
+            body: JSON.stringify({ priority, aiAssigned: true, aiSuggestion: priority, aiConfidence: confidence, aiResponse: raw, aiEvaluatedAt: evaluatedAt }),
+          });
+          // notify page to show toast
+          onAutoAccept?.(created.id, priority);
+        } else {
+          // Only persist the AI metadata (suggestion/confidence/response) without changing the primary priority
+          await fetch(`/api/tasks/${created.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ aiAssigned: true, aiSuggestion: priority, aiConfidence: confidence, aiResponse: raw, aiEvaluatedAt: evaluatedAt }),
           });
         }
       } catch (err) {
-        // ignore
+        // notify parent that AI finished without suggestion
+        onAiResult?.(created.id, undefined);
       }
+    } else {
+      // user overrode; no AI call
+      onAiResult?.(created.id, undefined);
     }
 
     setTitle('');
     setDescription('');
     setOverride('');
     setLoading(false);
-    onCreated?.();
   }
 
   return (

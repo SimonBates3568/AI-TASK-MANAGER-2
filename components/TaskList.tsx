@@ -8,6 +8,11 @@ type Task = {
   description: string;
   priority: string;
   completed: boolean;
+  aiAssigned?: boolean;
+  aiSuggestion?: string | null;
+  aiConfidence?: number | null;
+  aiResponse?: string | null;
+  aiEvaluatedAt?: string | null;
 };
 
 function priorityClass(p: string) {
@@ -20,14 +25,29 @@ function priorityClass(p: string) {
   }
 }
 
-export default function TaskList({ refreshFlag, filter }: { refreshFlag?: number, filter?: 'all'|'completed'|'incomplete' }) {
+export default function TaskList({ refreshFlag, filter, aiPending, aiSuggestion, onChange }: { refreshFlag?: number, filter?: 'all'|'completed'|'incomplete', aiPending?: Record<string, boolean>, aiSuggestion?: Record<string, string>, onChange?: () => void }) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editing, setEditing] = useState<Task | null>(null);
 
   async function load() {
-    const res = await fetch('/api/tasks');
-    const data = await res.json();
-    setTasks(data);
+    try {
+      const res = await fetch('/api/tasks', { cache: 'no-store' });
+      if (!res.ok) {
+        const err = await res.text();
+        console.error('Failed to load tasks', res.status, err);
+        return;
+      }
+      const data = await res.json();
+      if (!Array.isArray(data)) {
+        console.debug('Unexpected tasks response', data);
+        return;
+      }
+  console.debug('Loaded tasks', data.length);
+  setTasks(data);
+  try { onChange?.(); } catch (e) { console.debug('onChange handler threw', e); }
+    } catch (e) {
+      console.error('Error loading tasks', e);
+    }
   }
 
   useEffect(()=>{ load(); }, [refreshFlag]);
@@ -58,6 +78,23 @@ export default function TaskList({ refreshFlag, filter }: { refreshFlag?: number
             <div className="flex items-center gap-2">
               <h3 className="font-semibold">{t.title}</h3>
               <span className={`text-xs inline-flex items-center px-2 py-0.5 rounded-md font-medium border ${priorityClass(t.priority)}`}>{t.priority}</span>
+              {aiPending && aiPending[t.id] && (
+                <span className="ml-2 text-xs inline-flex items-center gap-1 text-gray-600"> 
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                  </svg>
+                  <span>AI pending</span>
+                </span>
+              )}
+              {aiSuggestion && aiSuggestion[t.id] && (
+                <span title={t.aiResponse ? `AI: ${t.aiResponse}\nEvaluated at: ${t.aiEvaluatedAt || ''}` : undefined} className="ml-2 text-xs inline-flex items-center px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700">AI: {aiSuggestion[t.id]}
+                  {/** show persisted confidence if available on task record or suggestion map */}
+                  {t.aiConfidence != null && (
+                    <span className={`ml-2 text-xs ${t.aiConfidence! >= 0.75 ? 'text-green-700' : t.aiConfidence! >= 0.5 ? 'text-yellow-700' : 'text-red-700'}`}>({Math.round((t.aiConfidence || 0) * 100)}%)</span>
+                  )}
+                </span>
+              )}
             </div>
             <p className="text-sm text-gray-600">{t.description}</p>
             <div className="mt-2 text-sm text-gray-500">{t.completed ? 'Completed' : 'Not completed'}</div>
