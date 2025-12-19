@@ -28,6 +28,7 @@ function priorityClass(p: string) {
 export default function TaskList({ refreshFlag, filter, aiPending, aiSuggestion, onChange }: { refreshFlag?: number, filter?: 'all'|'completed'|'incomplete', aiPending?: Record<string, boolean>, aiSuggestion?: Record<string, string>, onChange?: () => void }) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editing, setEditing] = useState<Task | null>(null);
+  const [applying, setApplying] = useState<Record<string, boolean>>({});
 
   async function load() {
     try {
@@ -87,13 +88,46 @@ export default function TaskList({ refreshFlag, filter, aiPending, aiSuggestion,
                   <span>AI pending</span>
                 </span>
               )}
-              {aiSuggestion && aiSuggestion[t.id] && (
-                <span title={t.aiResponse ? `AI: ${t.aiResponse}\nEvaluated at: ${t.aiEvaluatedAt || ''}` : undefined} className="ml-2 text-xs inline-flex items-center px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700">AI: {aiSuggestion[t.id]}
-                  {/** show persisted confidence if available on task record or suggestion map */}
-                  {t.aiConfidence != null && (
-                    <span className={`ml-2 text-xs ${t.aiConfidence! >= 0.75 ? 'text-green-700' : t.aiConfidence! >= 0.5 ? 'text-yellow-700' : 'text-red-700'}`}>({Math.round((t.aiConfidence || 0) * 100)}%)</span>
-                  )}
-                </span>
+              {((aiSuggestion && aiSuggestion[t.id]) || t.aiSuggestion) && (
+                <div className="ml-2 text-xs inline-flex items-center gap-2">
+                  <span title={t.aiResponse ? `AI: ${t.aiResponse}\nEvaluated at: ${t.aiEvaluatedAt || ''}` : undefined} className="inline-flex items-center px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700">
+                    AI: { (aiSuggestion && aiSuggestion[t.id]) ?? t.aiSuggestion }
+                    {t.aiConfidence != null && (
+                      <span className={`ml-2 text-xs ${t.aiConfidence! >= 0.75 ? 'text-green-700' : t.aiConfidence! >= 0.5 ? 'text-yellow-700' : 'text-red-700'}`}>({Math.round((t.aiConfidence || 0) * 100)}%)</span>
+                    )}
+                  </span>
+
+                  {/* Show explanation and apply action */}
+                  <details className="text-xs text-gray-600">
+                    <summary className="cursor-pointer select-none">Why?</summary>
+                    <div className="mt-1 max-w-xs whitespace-pre-wrap text-xs text-gray-700">{t.aiResponse || 'No explanation provided.'}</div>
+                  </details>
+
+                  <button
+                    className="ml-2 inline-flex items-center px-2 py-1 rounded-md bg-indigo-600 text-white text-xs hover:bg-indigo-700 focus:outline-none focus:ring-1 focus:ring-indigo-200"
+                    disabled={applying[t.id] || ((aiSuggestion && aiSuggestion[t.id]) ?? t.aiSuggestion) === t.priority}
+                    onClick={async () => {
+                      const suggestion = (aiSuggestion && aiSuggestion[t.id]) ?? t.aiSuggestion;
+                      if (!suggestion) return;
+                      setApplying(s => ({ ...s, [t.id]: true }));
+                      try {
+                        await fetch(`/api/tasks/${t.id}`, {
+                          method: 'PUT',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ priority: suggestion, aiAssigned: true })
+                        });
+                        await load();
+                        try { onChange?.(); } catch (e) { console.debug('onChange handler threw', e); }
+                      } catch (e) {
+                        console.error('Failed to apply suggestion', e);
+                      } finally {
+                        setApplying(s => ({ ...s, [t.id]: false }));
+                      }
+                    }}
+                  >
+                    {applying[t.id] ? 'Applying...' : 'Apply'}
+                  </button>
+                </div>
               )}
             </div>
             <p className="text-sm text-gray-600">{t.description}</p>

@@ -1,6 +1,7 @@
 import './globals.css';
 import React from 'react';
 import Header from '../components/Header';
+import Providers from '../components/Providers';
 
 export const metadata = {
   title: 'AI Task Manager',
@@ -11,10 +12,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <div className="container py-6">
-          <Header />
-          {children}
-        </div>
+        <Providers>
+          <div className="container py-6">
+            <Header />
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   );
