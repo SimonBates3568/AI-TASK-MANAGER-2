@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #__next {
+  height: 100%;
+}
+
+body {
+  @apply bg-gray-50 text-gray-900;
+}
+
+.priority-badge { @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold; }
+.priority-low { @apply bg-green-100 text-green-800; }
+.priority-medium { @apply bg-yellow-100 text-yellow-800; }
+.priority-high { @apply bg-orange-100 text-orange-800; }
+.priority-critical { @apply bg-red-100 text-red-800; }
