@@ -4,7 +4,7 @@
 // NextAuth. To enable full auth, wire this up to NextAuth's getServerSession
 // and return session.user.id (or your user id field).
 
-import { NextRequest } from 'next/server';
+import { NextRequest } from 'next/server.js';
 import cookie from 'cookie';
 
 /**
@@ -33,7 +33,7 @@ export async function getCurrentUserId(req?: Request | NextRequest): Promise<str
   // 3) If NextAuth is installed and configured, return the signed-in user's id.
   try {
   const { getServerSession } = await import('next-auth/next');
-  const { authOptions } = await import('./nextAuthOptions');
+  const { authOptions } = await import('./nextAuthOptions.js');
   const session = await getServerSession(authOptions as any);
     return (session as any)?.user?.id ?? null;
   } catch (e) {
