@@ -71,6 +71,10 @@ export default function Header() {
 
       {open && (
   <div className="absolute left-4 right-4 top-16 bg-white shadow-md rounded-md p-3 sm:hidden">
+          {/* Close (X) button inside the mobile menu for clearer UX */}
+          <button aria-label="Close menu" className="absolute right-3 top-3 p-1 rounded-md text-gray-600 hover:bg-gray-100" onClick={()=>setOpen(false)}>
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
           <nav className="flex flex-col gap-2">
             <Link href="/tasks" className="block w-full text-left px-3 py-2 rounded hover:bg-gray-50">Tasks</Link>
             <Link href="/plan" className="block w-full text-left px-3 py-2 rounded hover:bg-gray-50">Plan</Link>
