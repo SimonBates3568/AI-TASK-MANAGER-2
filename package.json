@@ -7,8 +7,10 @@
     "build": "next build",
     "start": "next start",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev --name init",
-    "seed": "ts-node --esm prisma/seed.ts",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:migrate:dev": "prisma migrate dev --name init",
+    "prisma:generate:watch": "prisma generate --watch",
+    "seed": "node prisma/seed.js",
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
