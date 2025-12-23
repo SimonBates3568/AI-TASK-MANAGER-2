@@ -3,8 +3,10 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  /// Use an env var so we can switch between local SQLite and Neon (Postgres) in production.
+  /// Set DATABASE_URL in your environment or in Vercel to your Neon connection string.
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Task {
