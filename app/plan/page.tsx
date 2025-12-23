@@ -1,6 +1,6 @@
 import React from 'react';
 import PlanClient from '../../components/PlanClient';
-import { prisma } from '../../lib/prisma.js';
+import { prisma } from '../../lib/prisma';
 
 async function getStats() {
   // Run DB query directly on the server to avoid making an HTTP request to our own API route

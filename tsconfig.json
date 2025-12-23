@@ -6,7 +6,7 @@
       "ES2022"
     ],
     "module": "ESNext",
-  "moduleResolution": "NodeNext",
+  "moduleResolution": "bundler",
     "jsx": "preserve",
     "strict": true,
     "esModuleInterop": true,

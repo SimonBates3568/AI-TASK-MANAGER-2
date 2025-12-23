@@ -33,7 +33,7 @@ export async function getCurrentUserId(req?: Request | NextRequest): Promise<str
   // 3) If NextAuth is installed and configured, return the signed-in user's id.
   try {
   const { getServerSession } = await import('next-auth/next');
-  const { authOptions } = await import('./nextAuthOptions.js');
+  const { authOptions } = await import('./nextAuthOptions');
   const session = await getServerSession(authOptions as any);
     return (session as any)?.user?.id ?? null;
   } catch (e) {
