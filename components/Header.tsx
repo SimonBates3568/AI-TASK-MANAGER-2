@@ -48,23 +48,9 @@ export default function Header() {
               </div>
             )}
           </div>
-        ) : (
+            ) : (
           <div className="flex items-center gap-2">
             <button onClick={() => signIn(undefined, { callbackUrl: '/tasks' })} className="px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700">Sign In</button>
-            <button
-              onClick={async () => {
-                try {
-                  await fetch('/api/auth/demo', { method: 'POST' });
-                  // navigate to tasks so the server will scope to demo user
-                  window.location.href = '/tasks';
-                } catch (e) {
-                  console.error('Demo sign-in failed', e);
-                }
-              }}
-              className="px-3 py-1 rounded bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
-            >
-              Sign in (demo)
-            </button>
           </div>
         )}
       </nav>
@@ -90,7 +76,6 @@ export default function Header() {
             ) : (
               <div className="flex flex-col gap-2">
                 <button onClick={() => signIn(undefined, { callbackUrl: '/tasks' })} className="w-full px-3 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Sign In</button>
-                <button onClick={async () => { try { await fetch('/api/auth/demo', { method: 'POST' }); window.location.href = '/tasks'; } catch (e) { console.error('Demo sign-in failed', e); } }} className="w-full px-3 py-2 rounded bg-yellow-100 text-yellow-800 hover:bg-yellow-200">Sign in (demo)</button>
               </div>
             )}
           </nav>

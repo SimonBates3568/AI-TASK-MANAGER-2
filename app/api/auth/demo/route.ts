@@ -1,17 +1,10 @@
+// Demo sign-in endpoint has been removed. Keep this route to return 404 so any accidental calls fail safely.
 import { NextResponse } from 'next/server';
-import { prisma } from '../../../../lib/prisma';
 
-export async function POST(req: Request) {
-  // Create or find a demo user and set a dev_user_id cookie for local testing.
-  const demoId = process.env.DEV_USER_ID || 'demo-user-0001';
-  let user = await prisma.user.findUnique({ where: { id: demoId } }).catch(() => null as any);
-  if (!user) {
-    // create a demo user with predictable id so the cookie maps
-    user = await prisma.user.create({ data: { id: demoId, name: 'Demo User', email: 'demo@local' } });
-  }
+export async function POST() {
+  return NextResponse.json({ ok: false, error: 'Demo sign-in removed' }, { status: 404 });
+}
 
-  const res = NextResponse.json({ ok: true, id: user.id });
-  // set cookie readable by server and client for convenience
-  res.headers.set('Set-Cookie', `dev_user_id=${user.id}; Path=/; Max-Age=${60 * 60 * 24 * 30}`);
-  return res;
+export async function GET() {
+  return NextResponse.json({ ok: false, error: 'Demo sign-in removed' }, { status: 404 });
 }
