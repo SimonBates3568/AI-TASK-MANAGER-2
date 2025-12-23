@@ -8,7 +8,7 @@ export default function Header() {
   const { data: session, status } = useSession();
   const [userOpen, setUserOpen] = useState(false);
   return (
-    <header className="flex items-center justify-between py-4">
+  <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between py-4 gap-3">
       <div className="flex items-center gap-3">
         <img src="/logo.svg" alt="AI Task Manager" className="h-10 w-10 rounded-md shadow-sm" />
         <div>
@@ -42,7 +42,7 @@ export default function Header() {
               <span className="text-sm text-gray-700">{session.user.name || session.user.email}</span>
             </button>
             {userOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-md p-2">
+              <div className="absolute right-0 mt-2 w-full sm:w-48 max-w-xs bg-white border rounded shadow-md p-2">
                 <Link href="/settings" className="block px-2 py-1 text-sm hover:bg-gray-50">Settings</Link>
                 <button onClick={() => signOut()} className="w-full text-left px-2 py-1 text-sm hover:bg-gray-50">Sign Out</button>
               </div>
@@ -70,7 +70,7 @@ export default function Header() {
       </nav>
 
       {open && (
-        <div className="absolute left-4 right-4 top-16 bg-white shadow-md rounded-md p-3 sm:hidden">
+  <div className="absolute left-4 right-4 top-16 bg-white shadow-md rounded-md p-3 sm:hidden">
           <nav className="flex flex-col gap-2">
             <Link href="/tasks" className="block w-full text-left px-3 py-2 rounded hover:bg-gray-50">Tasks</Link>
             <Link href="/plan" className="block w-full text-left px-3 py-2 rounded hover:bg-gray-50">Plan</Link>

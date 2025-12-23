@@ -63,7 +63,7 @@ export default function TasksPage() {
         </label>
         <label className="flex items-center gap-2">
           <span className="text-sm">Threshold:</span>
-          <input type="range" min={0} max={1} step={0.05} value={threshold} onChange={e=>setThreshold(parseFloat(e.target.value))} className="w-48" />
+          <input type="range" min={0} max={1} step={0.05} value={threshold} onChange={e=>setThreshold(parseFloat(e.target.value))} className="w-full sm:w-48" />
           <span className="text-sm">{Math.round(threshold*100)}%</span>
         </label>
       </div>

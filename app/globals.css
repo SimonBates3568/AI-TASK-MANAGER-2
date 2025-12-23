@@ -46,6 +46,8 @@ body {
   /* Surface: light background with dark text for good contrast.
      In dark mode we use a slightly lighter slate surface and light text. */
   @apply bg-white text-gray-900 shadow-md rounded-lg p-4;
+  /* slightly larger padding on medium+ screens */
+  @apply md:p-6;
   @apply dark:bg-slate-800 dark:text-slate-100;
 }
 .muted { @apply text-gray-500; }

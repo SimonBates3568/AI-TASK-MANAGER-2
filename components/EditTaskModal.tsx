@@ -37,7 +37,8 @@ export default function EditTaskModal({ task, onClose }: { task: any, onClose: (
         </div>
         <div className="mt-2">
           <label className="block text-sm">Priority</label>
-          <select className="mt-1 block w-48 border rounded p-2" value={priority} onChange={e => setPriority(e.target.value)}>
+          {/* responsive select width */}
+          <select className="mt-1 block w-full sm:w-48 border rounded p-2" value={priority} onChange={e => setPriority(e.target.value)}>
             <option value="LOW">LOW</option>
             <option value="MEDIUM">MEDIUM</option>
             <option value="HIGH">HIGH</option>

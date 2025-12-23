@@ -74,7 +74,7 @@ export default function TaskList({ refreshFlag, filter, aiPending, aiSuggestion,
   return (
     <div className="space-y-2">
       {displayed.map(t=> (
-        <div key={t.id} className="card flex items-start justify-between">
+  <div key={t.id} className="card flex flex-col sm:flex-row items-start sm:justify-between">
           <div>
             <div className="flex items-center gap-2">
               <h3 className="font-semibold">{t.title}</h3>
@@ -89,7 +89,9 @@ export default function TaskList({ refreshFlag, filter, aiPending, aiSuggestion,
                 </span>
               )}
               {((aiSuggestion && aiSuggestion[t.id]) || t.aiSuggestion) && (
-                <div className="ml-2 text-xs inline-flex items-center gap-2">
+                // allow the suggestion block to wrap on small screens so the "Apply" button
+                // can move below the text instead of overflowing the card
+                <div className="ml-2 text-xs flex flex-wrap items-center gap-2 max-w-full">
                   <span title={t.aiResponse ? `AI: ${t.aiResponse}\nEvaluated at: ${t.aiEvaluatedAt || ''}` : undefined} className="inline-flex items-center px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700">
                     AI: { (aiSuggestion && aiSuggestion[t.id]) ?? t.aiSuggestion }
                     {t.aiConfidence != null && (
@@ -104,7 +106,7 @@ export default function TaskList({ refreshFlag, filter, aiPending, aiSuggestion,
                   </details>
 
                   <button
-                    className="ml-2 inline-flex items-center px-2 py-1 rounded-md bg-indigo-600 text-white text-xs hover:bg-indigo-700 focus:outline-none focus:ring-1 focus:ring-indigo-200"
+                    className="ml-2 mt-2 sm:mt-0 inline-flex items-center px-2 py-1 rounded-md bg-indigo-600 text-white text-xs hover:bg-indigo-700 focus:outline-none focus:ring-1 focus:ring-indigo-200 flex-shrink-0"
                     disabled={applying[t.id] || ((aiSuggestion && aiSuggestion[t.id]) ?? t.aiSuggestion) === t.priority}
                     onClick={async () => {
                       const suggestion = (aiSuggestion && aiSuggestion[t.id]) ?? t.aiSuggestion;
@@ -133,22 +135,22 @@ export default function TaskList({ refreshFlag, filter, aiPending, aiSuggestion,
             <p className="text-sm text-gray-600">{t.description}</p>
             <div className="mt-2 text-sm text-gray-500">{t.completed ? 'Completed' : 'Not completed'}</div>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-row sm:flex-col gap-2 mt-2 sm:mt-0 items-end sm:items-start">
             <button
-              className="inline-flex items-center px-3 py-1.5 rounded-md bg-yellow-500 text-white hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+              className="inline-flex items-center px-3 py-1.5 rounded-md bg-yellow-500 text-white hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-300 text-sm"
               onClick={() => setEditing(t)}
             >
               Edit
             </button>
 
             <button
-              className="inline-flex items-center px-3 py-1.5 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300"
+              className="inline-flex items-center px-3 py-1.5 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300 text-sm"
               onClick={() => remove(t.id)}
             >
               Delete
             </button>
 
-            <button className="inline-flex items-center px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300" onClick={() => toggleComplete(t)}>
+            <button className="inline-flex items-center px-3 py-1.5 rounded-md bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300 text-sm" onClick={() => toggleComplete(t)}>
               {t.completed ? 'Undo' : 'Complete'}
             </button>
           </div>

@@ -91,7 +91,8 @@ export default function TaskInput({ onCreated, onAiResult, autoAccept, threshold
       </div>
       <div className="mb-2">
         <label className="block text-sm font-medium">Manual Priority (optional)</label>
-        <select className="mt-1 block w-48 input" value={override} onChange={e=>setOverride(e.target.value)}>
+        {/* responsive width: full on small screens, fixed on larger */}
+        <select className="mt-1 block w-full sm:w-48 input" value={override} onChange={e=>setOverride(e.target.value)}>
           <option value="">-- AI recommendation --</option>
           <option value="LOW">LOW</option>
           <option value="MEDIUM">MEDIUM</option>
