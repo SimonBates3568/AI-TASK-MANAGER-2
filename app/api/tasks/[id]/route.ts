@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '../../../../lib/prisma';
-import { getCurrentUserId } from '../../../../lib/auth';
+import { prisma } from '../../../../lib/prisma.js';
+import { getCurrentUserId } from '../../../../lib/auth.js';
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   const id = params.id;

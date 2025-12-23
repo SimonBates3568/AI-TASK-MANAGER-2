@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '../../../../lib/prisma';
+import { prisma } from '../../../../lib/prisma.js';
 
 export async function POST(req: Request) {
   // Create or find a demo user and set a dev_user_id cookie for local testing.
