@@ -6,7 +6,25 @@ export async function GET(req: Request) {
   try {
     // If a user is present, only return that user's tasks. Otherwise return all (dev/demo).
     const userId = await getCurrentUserId(req);
-    const tasks = await prisma.task.findMany({ where: userId ? { userId } : undefined, orderBy: { createdAt: 'desc' } });
+    const tasks = await prisma.task.findMany({
+      where: userId ? { userId } : undefined,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        priority: true,
+        completed: true,
+        aiAssigned: true,
+        aiSuggestion: true,
+        aiConfidence: true,
+        aiResponse: true,
+        aiEvaluatedAt: true,
+        userId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
     return NextResponse.json(tasks);
   } catch (err: any) {
     console.error('GET /api/tasks error', err);
@@ -38,7 +56,24 @@ export async function POST(req: Request) {
     }
 
     try {
-      const task = await prisma.task.create({ data });
+      const task = await prisma.task.create({
+        data,
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          priority: true,
+          completed: true,
+          aiAssigned: true,
+          aiSuggestion: true,
+          aiConfidence: true,
+          aiResponse: true,
+          aiEvaluatedAt: true,
+          userId: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
       return NextResponse.json(task);
     } catch (createErr) {
       // If the DB schema doesn't have dueDate/tags (migration not applied), retry without those fields.
@@ -50,7 +85,24 @@ export async function POST(req: Request) {
         aiAssigned: data.aiAssigned,
         userId: data.userId,
       };
-      const task = await prisma.task.create({ data: safeData });
+      const task = await prisma.task.create({
+        data: safeData,
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          priority: true,
+          completed: true,
+          aiAssigned: true,
+          aiSuggestion: true,
+          aiConfidence: true,
+          aiResponse: true,
+          aiEvaluatedAt: true,
+          userId: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
       return NextResponse.json(task);
     }
   } catch (err: any) {
