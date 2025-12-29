@@ -18,7 +18,7 @@ jest.mock('../../lib/prisma', () => ({ prisma: { task: { create: mockCreate, fin
 
 jest.mock('../../lib/auth', () => ({ getCurrentUserId: jest.fn().mockResolvedValue(undefined) }));
 
-import { GET, POST } from '../../app/api/tasks/route.js';
+import { GET, POST } from '../../app/api/tasks/route';
 
 describe('app/api/tasks/route', () => {
   beforeEach(() => {

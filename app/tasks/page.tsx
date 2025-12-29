@@ -68,7 +68,7 @@ export default function TasksPage() {
         </label>
       </div>
 
-      <TaskInput onCreated={handleCreated} onAiResult={handleAiResult} autoAccept={autoAccept} threshold={threshold} onAutoAccept={handleAutoAccept} />
+  <TaskInput onCreated={handleCreated} onAiResult={handleAiResult} autoAccept={autoAccept} threshold={threshold} onAutoAccept={handleAutoAccept} onToast={setToastMessage} />
       <TaskList refreshFlag={refreshFlag} aiPending={aiPending} aiSuggestion={aiSuggestion} />
       {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} />}
     </div>
