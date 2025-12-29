@@ -3,10 +3,10 @@ import PlanClient from '../../components/PlanClient';
 import { prisma } from '../../lib/prisma';
 
 async function getStats() {
-  // Run DB query directly on the server to avoid making an HTTP request to our own API route
-  const tasks = await prisma.task.findMany();
-  const total = tasks.length;
-  const completed = tasks.filter((t: any) => t.completed).length;
+  // Run lightweight DB queries to avoid selecting columns that may not exist in older DBs.
+  // Use count() so Prisma will only issue simple COUNT queries and not reference model columns like `dueDate`.
+  const total = await prisma.task.count();
+  const completed = await prisma.task.count({ where: { completed: true } });
   return { total, completed };
 }
 
