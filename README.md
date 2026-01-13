@@ -1,10 +1,3 @@
-Below is a **professional, modern README** that would pass a junior → mid full-stack screening.
-It explains **what the system is**, **how it’s built**, **how to run it**, and **what *you* contributed** — not just boilerplate.
-
-You can copy-paste this directly into `README.md`.
-
----
-
 # AI Task Manager
 
 An AI-powered task management application built with **Next.js App Router**, **TypeScript**, **Prisma**, and **Tailwind CSS**.
